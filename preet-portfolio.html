@@ -1,0 +1,1897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Preet Kaur — SOC Analyst & Cybersecurity Researcher</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #040a06;
+  --bg2: #070f09;
+  --panel: #0a1a0d;
+  --border: #0d2a12;
+  --green: #00ff64;
+  --green2: #00cc50;
+  --dim: #1a3320;
+  --text: #b8d4bc;
+  --muted: #4a7a52;
+  --red: #ff2d55;
+  --yellow: #ffd60a;
+  --mono: 'Share Tech Mono', monospace;
+  --head: 'Orbitron', sans-serif;
+  --body: 'Rajdhani', sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--body);
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* CUSTOM CURSOR */
+.cursor {
+  width: 12px; height: 12px;
+  background: var(--green);
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  transition: transform 0.1s;
+  box-shadow: 0 0 10px var(--green);
+}
+
+.cursor-ring {
+  width: 36px; height: 36px;
+  border: 1px solid rgba(0,255,100,0.4);
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  z-index: 9998;
+  transition: all 0.15s;
+}
+
+/* CANVAS BACKGROUND */
+#bg-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* SPLASH SCREEN */
+#splash {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.8s ease;
+}
+
+.splash-monogram {
+  font-family: var(--head);
+  font-size: 80px;
+  font-weight: 900;
+  color: var(--green);
+  text-shadow: 0 0 40px rgba(0,255,100,0.6);
+  animation: splashPulse 1.5s ease infinite;
+  margin-bottom: 32px;
+}
+
+@keyframes splashPulse {
+  0%,100% { text-shadow: 0 0 40px rgba(0,255,100,0.6); }
+  50% { text-shadow: 0 0 80px rgba(0,255,100,1), 0 0 120px rgba(0,255,100,0.4); }
+}
+
+.splash-bar-wrap {
+  width: 240px;
+  height: 2px;
+  background: var(--dim);
+  overflow: hidden;
+}
+
+.splash-bar {
+  height: 100%;
+  background: var(--green);
+  width: 0%;
+  animation: loadBar 1.6s ease forwards;
+  box-shadow: 0 0 10px var(--green);
+}
+
+@keyframes loadBar {
+  0% { width: 0%; }
+  100% { width: 100%; }
+}
+
+.splash-text {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 4px;
+  color: var(--muted);
+  margin-top: 16px;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink { 0%,100%{opacity:1}50%{opacity:0.3} }
+
+/* NAV */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 16px 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(4,10,6,0.9);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+}
+
+.nav-logo {
+  font-family: var(--head);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--green);
+  letter-spacing: 3px;
+  text-shadow: 0 0 20px rgba(0,255,100,0.4);
+}
+
+.nav-links {
+  display: flex;
+  gap: 32px;
+  list-style: none;
+}
+
+.nav-links a {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.3s;
+  text-transform: uppercase;
+}
+
+.nav-links a:hover { color: var(--green); text-shadow: 0 0 10px rgba(0,255,100,0.5); }
+
+.nav-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--green);
+}
+
+.status-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 8px var(--green);
+  animation: blink 1.5s infinite;
+}
+
+/* SCROLL PROGRESS */
+.scroll-progress {
+  position: fixed;
+  top: 0; left: 0;
+  height: 2px;
+  background: var(--green);
+  box-shadow: 0 0 8px var(--green);
+  z-index: 200;
+  width: 0%;
+  transition: width 0.1s;
+}
+
+/* SECTION NAV DOTS */
+.section-dots {
+  position: fixed;
+  right: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sec-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--dim);
+  border: 1px solid var(--muted);
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.sec-dot.active {
+  background: var(--green);
+  box-shadow: 0 0 8px var(--green);
+  transform: scale(1.5);
+}
+
+/* MAIN CONTENT */
+main { position: relative; z-index: 1; }
+
+/* SECTIONS */
+section {
+  min-height: 100vh;
+  padding: 100px 80px;
+  position: relative;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+section.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* SECTION HEADERS */
+.sec-header {
+  margin-bottom: 64px;
+}
+
+.sec-tag {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 4px;
+  color: var(--green);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sec-tag::before {
+  content: '';
+  width: 32px; height: 1px;
+  background: var(--green);
+}
+
+.sec-title {
+  font-family: var(--head);
+  font-size: 42px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 2px;
+  line-height: 1.1;
+}
+
+.sec-title span { color: var(--green); }
+
+/* ========== HERO ========== */
+#hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding: 100px 80px 60px;
+  opacity: 1;
+  transform: none;
+}
+
+.hero-content { max-width: 800px; }
+
+.hero-eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 5px;
+  color: var(--green);
+  margin-bottom: 20px;
+  opacity: 0;
+  animation: fadeUp 0.8s 1.8s ease forwards;
+}
+
+.hero-name {
+  font-family: var(--head);
+  font-size: clamp(48px, 8vw, 88px);
+  font-weight: 900;
+  line-height: 1.0;
+  color: #ffffff;
+  margin-bottom: 12px;
+  opacity: 0;
+  animation: fadeUp 0.8s 2s ease forwards;
+}
+
+.hero-name span {
+  color: var(--green);
+  text-shadow: 0 0 40px rgba(0,255,100,0.4);
+}
+
+.hero-role {
+  font-family: var(--head);
+  font-size: clamp(16px, 3vw, 22px);
+  font-weight: 400;
+  color: var(--muted);
+  letter-spacing: 4px;
+  margin-bottom: 32px;
+  opacity: 0;
+  animation: fadeUp 0.8s 2.2s ease forwards;
+}
+
+.hero-summary {
+  font-family: var(--body);
+  font-size: 16px;
+  line-height: 1.8;
+  color: var(--text);
+  max-width: 620px;
+  margin-bottom: 48px;
+  opacity: 0;
+  animation: fadeUp 0.8s 2.4s ease forwards;
+  border-left: 2px solid var(--green);
+  padding-left: 20px;
+}
+
+.hero-stats {
+  display: flex;
+  gap: 40px;
+  margin-bottom: 48px;
+  opacity: 0;
+  animation: fadeUp 0.8s 2.6s ease forwards;
+}
+
+.hero-stat { text-align: center; }
+
+.hero-stat-num {
+  font-family: var(--head);
+  font-size: 36px;
+  font-weight: 900;
+  color: var(--green);
+  text-shadow: 0 0 20px rgba(0,255,100,0.4);
+  display: block;
+}
+
+.hero-stat-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+.hero-btns {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  opacity: 0;
+  animation: fadeUp 0.8s 2.8s ease forwards;
+}
+
+.btn-primary {
+  background: var(--green);
+  color: var(--bg);
+  padding: 14px 32px;
+  font-family: var(--head);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s;
+  text-transform: uppercase;
+}
+
+.btn-primary:hover {
+  background: var(--bg);
+  color: var(--green);
+  box-shadow: 0 0 24px rgba(0,255,100,0.4), inset 0 0 0 1px var(--green);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--green);
+  padding: 14px 32px;
+  font-family: var(--head);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  border: 1px solid var(--green);
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s;
+  text-transform: uppercase;
+}
+
+.btn-secondary:hover {
+  background: rgba(0,255,100,0.08);
+  box-shadow: 0 0 24px rgba(0,255,100,0.2);
+}
+
+.hero-location {
+  margin-top: 32px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--muted);
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  opacity: 0;
+  animation: fadeUp 0.8s 3s ease forwards;
+}
+
+.hero-location span { display: flex; align-items: center; gap: 6px; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ========== ABOUT ========== */
+#about { background: linear-gradient(180deg, var(--bg) 0%, var(--bg2) 100%); }
+
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: start;
+}
+
+.about-text p {
+  font-size: 15px;
+  line-height: 1.9;
+  color: var(--text);
+  margin-bottom: 20px;
+}
+
+.about-highlights {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.highlight-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  padding: 20px;
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+
+.highlight-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--green);
+  transform: scaleX(0);
+  transition: transform 0.3s;
+}
+
+.highlight-card:hover { border-color: var(--green); transform: translateY(-4px); }
+.highlight-card:hover::before { transform: scaleX(1); }
+
+.hl-icon { font-size: 24px; margin-bottom: 10px; }
+.hl-title {
+  font-family: var(--head);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--green);
+  margin-bottom: 6px;
+}
+
+.hl-text { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+/* ========== EXPERIENCE ========== */
+#experience { background: var(--bg2); }
+
+.exp-item {
+  border: 1px solid var(--border);
+  margin-bottom: 16px;
+  background: var(--panel);
+  transition: all 0.3s;
+  overflow: hidden;
+}
+
+.exp-header {
+  padding: 24px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.exp-header:hover { background: rgba(0,255,100,0.04); }
+
+.exp-left { flex: 1; }
+
+.exp-role {
+  font-family: var(--head);
+  font-size: 16px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+}
+
+.exp-company {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--green);
+  letter-spacing: 1px;
+}
+
+.exp-meta {
+  display: flex;
+  gap: 16px;
+  margin-top: 6px;
+}
+
+.exp-date, .exp-loc {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 1px;
+}
+
+.exp-toggle {
+  font-size: 20px;
+  color: var(--green);
+  transition: transform 0.3s;
+  font-family: var(--mono);
+}
+
+.exp-item.open .exp-toggle { transform: rotate(45deg); }
+.exp-item.open { border-color: var(--green); }
+
+.exp-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease;
+  padding: 0 28px;
+}
+
+.exp-item.open .exp-body { max-height: 600px; padding: 0 28px 24px; }
+
+.exp-bullet {
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--text);
+  margin-bottom: 10px;
+  padding-left: 16px;
+  position: relative;
+}
+
+.exp-bullet::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: var(--green);
+  font-size: 12px;
+}
+
+.exp-bullet strong { color: var(--green); }
+
+.exp-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.chip {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 2px;
+  padding: 4px 10px;
+  border: 1px solid var(--dim);
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+.chip.highlight {
+  border-color: rgba(0,255,100,0.3);
+  color: var(--green);
+  background: rgba(0,255,100,0.05);
+}
+
+/* ========== RESEARCH ========== */
+#research { background: var(--bg); }
+
+.research-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  padding: 40px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s;
+}
+
+.research-card::before {
+  content: 'IEEE PUBLISHED';
+  position: absolute;
+  top: 20px; right: 20px;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 3px;
+  color: var(--green);
+  border: 1px solid var(--green);
+  padding: 4px 10px;
+}
+
+.research-card:hover { border-color: var(--green); transform: translateY(-4px); box-shadow: 0 20px 60px rgba(0,255,100,0.1); }
+
+.research-journal {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: var(--green);
+  margin-bottom: 12px;
+}
+
+.research-title {
+  font-family: var(--head);
+  font-size: 22px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 1px;
+  margin-bottom: 16px;
+  line-height: 1.3;
+}
+
+.research-authors {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--muted);
+  margin-bottom: 20px;
+  letter-spacing: 1px;
+}
+
+.research-abstract {
+  font-size: 14px;
+  line-height: 1.8;
+  color: var(--text);
+  margin-bottom: 24px;
+}
+
+.research-metrics {
+  display: flex;
+  gap: 32px;
+  padding: 20px 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 24px;
+}
+
+.r-metric { text-align: center; }
+
+.r-metric-num {
+  font-family: var(--head);
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--green);
+  display: block;
+}
+
+.r-metric-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--muted);
+}
+
+/* ========== PROJECTS ========== */
+#projects { background: var(--bg2); }
+
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.project-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  padding: 28px;
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+
+.project-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(0,255,100,0.03) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.project-card:hover {
+  border-color: var(--green);
+  transform: translateY(-6px);
+  box-shadow: 0 20px 60px rgba(0,255,100,0.1);
+}
+
+.project-card:hover::after { opacity: 1; }
+
+.proj-type {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 3px;
+  color: var(--green);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.proj-type::before {
+  content: '';
+  width: 20px; height: 1px;
+  background: var(--green);
+}
+
+.proj-title {
+  font-family: var(--head);
+  font-size: 16px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 1px;
+  margin-bottom: 12px;
+  line-height: 1.3;
+}
+
+.proj-desc {
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--text);
+  margin-bottom: 20px;
+}
+
+.proj-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 20px;
+}
+
+.proj-link {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--green);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: gap 0.3s;
+  border-bottom: 1px solid rgba(0,255,100,0.3);
+  padding-bottom: 4px;
+  width: fit-content;
+}
+
+.proj-link:hover { gap: 10px; }
+
+/* ========== SKILLS ========== */
+#skills { background: var(--bg); }
+
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.skill-group {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  padding: 28px;
+  transition: border-color 0.3s;
+}
+
+.skill-group:hover { border-color: var(--green); }
+
+.skill-group-title {
+  font-family: var(--head);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  color: var(--green);
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.skill-item {
+  margin-bottom: 14px;
+}
+
+.skill-name {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: var(--text);
+  margin-bottom: 6px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.skill-bar {
+  height: 2px;
+  background: var(--dim);
+  position: relative;
+  overflow: hidden;
+}
+
+.skill-fill {
+  height: 100%;
+  background: var(--green);
+  box-shadow: 0 0 6px var(--green);
+  width: 0%;
+  transition: width 1.5s ease;
+}
+
+/* ========== CERTIFICATIONS ========== */
+#certifications { background: var(--bg2); }
+
+.certs-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.cert-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  padding: 24px 20px;
+  text-align: center;
+  transition: all 0.3s;
+  position: relative;
+}
+
+.cert-card:hover {
+  border-color: var(--green);
+  transform: translateY(-4px);
+  box-shadow: 0 16px 40px rgba(0,255,100,0.1);
+}
+
+.cert-icon { font-size: 32px; margin-bottom: 12px; }
+
+.cert-name {
+  font-family: var(--head);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #ffffff;
+  margin-bottom: 6px;
+  line-height: 1.4;
+}
+
+.cert-issuer {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--green);
+}
+
+/* ========== EDUCATION ========== */
+#education { background: var(--bg); }
+
+.edu-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.edu-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  padding: 28px;
+  transition: all 0.3s;
+}
+
+.edu-card:hover { border-color: var(--green); }
+
+.edu-degree {
+  font-family: var(--head);
+  font-size: 14px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
+
+.edu-school {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--green);
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+
+.edu-date {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 1px;
+}
+
+/* ========== SERVICES ========== */
+#services { background: var(--bg2); }
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.service-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  padding: 32px;
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+
+.service-card::before {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--green);
+  transform: scaleX(0);
+  transition: transform 0.3s;
+}
+
+.service-card:hover { border-color: var(--green); transform: translateY(-6px); }
+.service-card:hover::before { transform: scaleX(1); }
+
+.svc-icon { font-size: 36px; margin-bottom: 16px; }
+
+.svc-title {
+  font-family: var(--head);
+  font-size: 16px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 2px;
+  margin-bottom: 12px;
+}
+
+.svc-desc {
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--text);
+  margin-bottom: 20px;
+}
+
+.svc-items {
+  list-style: none;
+  margin-bottom: 24px;
+}
+
+.svc-items li {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: var(--muted);
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.svc-items li::before { content: '→'; color: var(--green); }
+
+.svc-price {
+  font-family: var(--head);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--green);
+}
+
+/* ========== CONTACT ========== */
+#contact {
+  background: var(--bg);
+  min-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: start;
+}
+
+.contact-info { }
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.contact-icon {
+  width: 40px; height: 40px;
+  border: 1px solid var(--dim);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.contact-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+
+.contact-value {
+  font-size: 13px;
+  color: var(--text);
+}
+
+.contact-value a {
+  color: var(--green);
+  text-decoration: none;
+  transition: opacity 0.3s;
+}
+
+.contact-value a:hover { opacity: 0.7; }
+
+.avail-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0,255,100,0.08);
+  border: 1px solid rgba(0,255,100,0.3);
+  padding: 12px 20px;
+  margin-top: 32px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: var(--green);
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+.form-group { display: flex; flex-direction: column; gap: 8px; }
+
+.form-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 3px;
+  color: var(--green);
+  text-transform: uppercase;
+}
+
+.form-input {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  padding: 12px 16px;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.form-input:focus { border-color: var(--green); }
+.form-input::placeholder { color: var(--muted); }
+
+textarea.form-input { resize: none; height: 120px; }
+
+/* FOOTER */
+footer {
+  position: relative;
+  z-index: 1;
+  background: var(--bg2);
+  border-top: 1px solid var(--border);
+  padding: 40px 80px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.footer-logo {
+  font-family: var(--head);
+  font-size: 14px;
+  color: var(--green);
+  letter-spacing: 3px;
+}
+
+.footer-copy {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--muted);
+}
+
+.footer-links {
+  display: flex;
+  gap: 20px;
+}
+
+.footer-links a {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.footer-links a:hover { color: var(--green); }
+
+@media (max-width: 768px) {
+  nav { padding: 16px 20px; }
+  .nav-links { display: none; }
+  section { padding: 80px 20px; }
+  #hero { padding: 100px 20px 60px; }
+  .about-grid, .contact-grid { grid-template-columns: 1fr; }
+  .projects-grid, .skills-grid, .services-grid { grid-template-columns: 1fr; }
+  .certs-grid { grid-template-columns: repeat(2,1fr); }
+  .edu-grid { grid-template-columns: 1fr; }
+  .hero-stats { gap: 20px; flex-wrap: wrap; }
+  .hero-btns { flex-direction: column; }
+  .research-metrics { flex-wrap: wrap; gap: 16px; }
+  footer { flex-direction: column; gap: 16px; text-align: center; }
+  .section-dots { display: none; }
+  .form-row { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- CANVAS -->
+<canvas id="bg-canvas"></canvas>
+
+<!-- SCROLL PROGRESS -->
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<!-- SPLASH -->
+<div id="splash">
+  <div class="splash-monogram">PK</div>
+  <div class="splash-bar-wrap"><div class="splash-bar"></div></div>
+  <div class="splash-text">INITIALIZING PORTFOLIO...</div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">PREET.KAUR</div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#research">Research</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <div class="nav-status">
+    <div class="status-dot"></div>
+    OPEN TO WORK
+  </div>
+</nav>
+
+<!-- SECTION DOTS -->
+<div class="section-dots">
+  <div class="sec-dot active" onclick="scrollTo('#hero')"></div>
+  <div class="sec-dot" onclick="scrollTo('#about')"></div>
+  <div class="sec-dot" onclick="scrollTo('#experience')"></div>
+  <div class="sec-dot" onclick="scrollTo('#research')"></div>
+  <div class="sec-dot" onclick="scrollTo('#projects')"></div>
+  <div class="sec-dot" onclick="scrollTo('#skills')"></div>
+  <div class="sec-dot" onclick="scrollTo('#certifications')"></div>
+  <div class="sec-dot" onclick="scrollTo('#services')"></div>
+  <div class="sec-dot" onclick="scrollTo('#contact')"></div>
+</div>
+
+<main>
+
+<!-- ========== HERO ========== -->
+<section id="hero">
+  <div class="hero-content">
+    <div class="hero-eyebrow">// SOC ANALYST & CYBERSECURITY RESEARCHER //</div>
+    <h1 class="hero-name">PREET<br><span>KAUR</span></h1>
+    <div class="hero-role">THREAT INTELLIGENCE · SOC OPERATIONS · VULNERABILITY ASSESSMENT</div>
+    <p class="hero-summary">I detect, investigate, and shut down threats before they become breaches. 2+ years across SOC operations and threat intelligence — with IEEE-published research on EPT/TLB virtualization security that gives me a systems-level understanding most analysts don't have.</p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <span class="hero-stat-num">500+</span>
+        <span class="hero-stat-label">Alerts Triaged</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-num">10+</span>
+        <span class="hero-stat-label">APT Groups Profiled</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-num">28</span>
+        <span class="hero-stat-label">IOC Reports</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-num">25%</span>
+        <span class="hero-stat-label">False Positive Reduction</span>
+      </div>
+    </div>
+    <div class="hero-btns">
+      <a href="#experience" class="btn-primary">View Experience →</a>
+      <a href="https://linkedin.com/in/preet-kaur3535" target="_blank" class="btn-secondary">LinkedIn ↗</a>
+      <a href="https://preetkaur3535ok.github.io/SOC--THREAT-TRIAGE-SIMULATOR" target="_blank" class="btn-secondary">SOC Simulator ↗</a>
+    </div>
+    <div class="hero-location">
+      <span>📍 Merrick, NY 11566</span>
+      <span>✉ preetkaur3535ok@gmail.com</span>
+      <span>🎯 Open to NYC & Dubai/UAE</span>
+    </div>
+  </div>
+</section>
+
+<!-- ========== ABOUT ========== -->
+<section id="about">
+  <div class="sec-header">
+    <div class="sec-tag">WHO I AM</div>
+    <h2 class="sec-title">About <span>Me</span></h2>
+  </div>
+  <div class="about-grid">
+    <div class="about-text">
+      <p>I'm a cybersecurity professional with 2+ years of hands-on experience in SOC operations, threat intelligence, and vulnerability assessment. Currently pursuing my MS in Cybersecurity at The City College of New York, with 18 graduate-level credits completed at Hofstra University (GPA 3.56).</p>
+      <p>What sets me apart is my graduate research on EPT/TLB virtualization security in x86 hypervisors — published through Hofstra University and cited in IEEE Transactions on Computers. I understand not just what an alert means, but why the underlying architecture behaves the way it does.</p>
+      <p>I've triaged 500+ security alerts across 10+ client environments, profiled 10+ APT groups using MITRE ATT&CK, and delivered 28 weekly IOC reports that directly shaped detection coverage for active SOC teams.</p>
+      <p>Currently seeking SOC Analyst and Threat Intelligence roles in NYC, and sponsored cybersecurity positions in Dubai/UAE.</p>
+    </div>
+    <div class="about-highlights">
+      <div class="highlight-card">
+        <div class="hl-icon">🔬</div>
+        <div class="hl-title">IEEE Researcher</div>
+        <div class="hl-text">Published research on EPT/TLB virtualization security in x86 hypervisors</div>
+      </div>
+      <div class="highlight-card">
+        <div class="hl-icon">🎓</div>
+        <div class="hl-title">MS Cybersecurity</div>
+        <div class="hl-text">CCNY + Hofstra University · GPA 3.56 · 18 graduate credits</div>
+      </div>
+      <div class="highlight-card">
+        <div class="hl-icon">🛡️</div>
+        <div class="hl-title">SOC Experience</div>
+        <div class="hl-text">2+ years across SOC operations, threat intel, and vulnerability assessment</div>
+      </div>
+      <div class="highlight-card">
+        <div class="hl-icon">🌍</div>
+        <div class="hl-title">Global Ready</div>
+        <div class="hl-text">Open to NYC roles and sponsored positions in Dubai/UAE market</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== EXPERIENCE ========== -->
+<section id="experience">
+  <div class="sec-header">
+    <div class="sec-tag">CAREER HISTORY</div>
+    <h2 class="sec-title">Work <span>Experience</span></h2>
+  </div>
+
+  <div class="exp-item open" onclick="toggleExp(this)">
+    <div class="exp-header">
+      <div class="exp-left">
+        <div class="exp-role">Cybersecurity Research Intern</div>
+        <div class="exp-company">Hofstra University</div>
+        <div class="exp-meta">
+          <span class="exp-date">Sept 2025 — Dec 2025</span>
+          <span class="exp-loc">Hempstead, NY</span>
+        </div>
+      </div>
+      <div class="exp-toggle">+</div>
+    </div>
+    <div class="exp-body">
+      <div class="exp-bullet">Designed <strong>15+ controlled test scenarios</strong> in VMware and VirtualBox evaluating EPT-based vs. traditional x86 paging performance, producing a formal technical report adopted as a reference for secure cloud infrastructure design</div>
+      <div class="exp-bullet">Reduced lab environment setup time by <strong>~35%</strong> by writing automated configuration scripts in Linux Bash, enabling faster iteration across 3 distinct hypervisor configurations</div>
+      <div class="exp-bullet">Measured address translation latency and TLB flush overhead across VMware ESXi, VirtualBox, and bare-metal Linux, quantifying a <strong>15–20% performance gap</strong> between EPT and shadow paging under load</div>
+      <div class="exp-bullet">Documented all findings across <strong>4 structured technical reports</strong> covering x86 architecture behavior, EPT security implications, and hypervisor-specific recommendations for multi-tenant cloud environments</div>
+      <div class="exp-chips">
+        <span class="chip highlight">EPT/TLB Security</span>
+        <span class="chip highlight">VMware ESXi</span>
+        <span class="chip">x86 Architecture</span>
+        <span class="chip">Linux Bash</span>
+        <span class="chip">VirtualBox</span>
+        <span class="chip">Hypervisor Security</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="exp-item" onclick="toggleExp(this)">
+    <div class="exp-header">
+      <div class="exp-left">
+        <div class="exp-role">Threat Intelligence Intern</div>
+        <div class="exp-company">ThreatHive Labs</div>
+        <div class="exp-meta">
+          <span class="exp-date">Feb 2024 — Aug 2024</span>
+          <span class="exp-loc">Remote · New Delhi</span>
+        </div>
+      </div>
+      <div class="exp-toggle">+</div>
+    </div>
+    <div class="exp-body">
+      <div class="exp-bullet">Built threat actor profiles for <strong>10+ APT groups</strong> in MITRE ATT&CK Navigator, mapping TTPs to client-specific attack surfaces across 4 client dashboards</div>
+      <div class="exp-bullet">Reduced false positives by an estimated <strong>20–25%</strong> across 4 client environments by correlating Splunk SIEM alerts with threat intelligence feeds from OSINT sources</div>
+      <div class="exp-bullet">Delivered <strong>28 weekly IOC reports</strong> in 7 months using structured threat reporting templates, distributing Splunk-compatible detection signatures covering phishing, malware, and C2 patterns</div>
+      <div class="exp-bullet">Developed <strong>8+ MITRE ATT&CK-aligned Splunk detection rules</strong> targeting initial access and persistence techniques, expanding automated threat coverage across monitored client networks</div>
+      <div class="exp-chips">
+        <span class="chip highlight">Splunk SIEM</span>
+        <span class="chip highlight">MITRE ATT&CK</span>
+        <span class="chip highlight">Threat Intelligence</span>
+        <span class="chip">OSINT</span>
+        <span class="chip">IOC Analysis</span>
+        <span class="chip">APT Profiling</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="exp-item" onclick="toggleExp(this)">
+    <div class="exp-header">
+      <div class="exp-left">
+        <div class="exp-role">SOC Analyst</div>
+        <div class="exp-company">NoVA Cyber Solutions</div>
+        <div class="exp-meta">
+          <span class="exp-date">Jan 2023 — Jan 2024</span>
+          <span class="exp-loc">New Delhi</span>
+        </div>
+      </div>
+      <div class="exp-toggle">+</div>
+    </div>
+    <div class="exp-body">
+      <div class="exp-bullet">Triaged <strong>50+ Splunk SIEM alerts per week</strong> across 6 client environments, performing first-line log analysis, IOC identification, and escalation using Wireshark and OSINT tools</div>
+      <div class="exp-bullet">Reduced detection-to-escalation time by <strong>~30%</strong> by standardizing Splunk-based triage playbooks and integrating VirusTotal and OSINT lookups into the alert investigation workflow</div>
+      <div class="exp-bullet">Identified <strong>3–5 previously undetected threats per month</strong> through proactive threat hunting using MITRE ATT&CK Navigator, catching anomalies that bypassed automated detection rules</div>
+      <div class="exp-bullet">Executed bi-weekly vulnerability assessments using Nmap and Wireshark across 6 client networks, delivering prioritized remediation reports with CVSS-scored findings</div>
+      <div class="exp-bullet">Supported <strong>GDPR compliance audits</strong> across 3 client accounts, reviewing security controls against Article 32 requirements using NIST CSF as the assessment framework</div>
+      <div class="exp-chips">
+        <span class="chip highlight">SOC Operations</span>
+        <span class="chip highlight">Threat Hunting</span>
+        <span class="chip">Wireshark</span>
+        <span class="chip">Nmap</span>
+        <span class="chip">GDPR</span>
+        <span class="chip">NIST CSF</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="exp-item" onclick="toggleExp(this)">
+    <div class="exp-header">
+      <div class="exp-left">
+        <div class="exp-role">Cybersecurity Analyst Intern</div>
+        <div class="exp-company">SecureEdge Fintech Pvt Ltd</div>
+        <div class="exp-meta">
+          <span class="exp-date">Jul 2022 — Dec 2022</span>
+          <span class="exp-loc">Remote · New Delhi</span>
+        </div>
+      </div>
+      <div class="exp-toggle">+</div>
+    </div>
+    <div class="exp-body">
+      <div class="exp-bullet">Monitored network traffic across <strong>3 fintech client environments</strong>, identifying and escalating 15+ anomalies with structured evidence reports</div>
+      <div class="exp-bullet">Built <strong>10+ MITRE ATT&CK-aligned detection use cases</strong> for hybrid cloud and on-prem environments, expanding coverage for lateral movement and privilege escalation</div>
+      <div class="exp-bullet">Reduced open vulnerability backlog by <strong>~40%</strong> by executing monthly Nmap and OpenVAS scans and tracking all findings from discovery through remediation closure</div>
+      <div class="exp-bullet">Triaged <strong>20+ phishing incidents</strong> end-to-end using email header analysis and Any.run sandbox, extracting IOCs and preventing recurrence across 3 client accounts</div>
+      <div class="exp-chips">
+        <span class="chip highlight">OpenVAS</span>
+        <span class="chip">Phishing Analysis</span>
+        <span class="chip">SIEM</span>
+        <span class="chip">Fintech Security</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="exp-item" onclick="toggleExp(this)">
+    <div class="exp-header">
+      <div class="exp-left">
+        <div class="exp-role">Cybersecurity Intern</div>
+        <div class="exp-company">InfoShield LLC</div>
+        <div class="exp-meta">
+          <span class="exp-date">Jan 2022 — Jun 2022</span>
+          <span class="exp-loc">New Delhi</span>
+        </div>
+      </div>
+      <div class="exp-toggle">+</div>
+    </div>
+    <div class="exp-body">
+      <div class="exp-bullet">Reviewed firewall logs and monitored network traffic using Wireshark across 2 internal environments, escalating <strong>10+ confirmed anomalies</strong> to senior analysts</div>
+      <div class="exp-bullet">Scanned 5+ internal web applications using Nmap, coordinating remediation of <strong>12+ vulnerabilities</strong> with the development team</div>
+      <div class="exp-bullet">Applied NIST CSF Identify and Protect functions across risk assessments for 3 client-facing products, delivering prioritized remediation recommendations</div>
+      <div class="exp-bullet">Practiced reconnaissance, enumeration, and controlled exploitation across <strong>6 simulated attack scenarios</strong> in an isolated Kali Linux lab (SQLi, XSS, misconfigured services)</div>
+      <div class="exp-chips">
+        <span class="chip">Kali Linux</span>
+        <span class="chip">NIST CSF</span>
+        <span class="chip">Firewall Analysis</span>
+        <span class="chip">Ethical Hacking</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== RESEARCH ========== -->
+<section id="research">
+  <div class="sec-header">
+    <div class="sec-tag">ACADEMIC RESEARCH</div>
+    <h2 class="sec-title">IEEE <span>Research</span></h2>
+  </div>
+  <div class="research-card">
+    <div class="research-journal">IEEE TRANSACTIONS ON COMPUTERS · VOL. 27, NO. 9 · AUGUST 2023</div>
+    <div class="research-title">Efficiently Allocating Huge Pages Based on Data Temperature in Virtualized Clouds (HOTTLB)</div>
+    <div class="research-authors">Zhaoxi Shi · Jiyuan Zhang · Jianchen Shan (Hofstra University) · Weiwei Jia · Preet Kaur</div>
+    <p class="research-abstract">HOTTLB proposes an effective solution that allocates huge pages based on the data temperature of applications in virtualized systems. Addressing memory fragmentation and TLB miss overhead in cloud environments through intelligent hot-data prioritization. Research conducted on EPT/TLB behavior in x86 hypervisors, with direct implications for secure cloud infrastructure design and multi-tenant virtualization security.</p>
+    <div class="research-metrics">
+      <div class="r-metric">
+        <span class="r-metric-num">20.6%</span>
+        <span class="r-metric-label">Throughput Improvement</span>
+      </div>
+      <div class="r-metric">
+        <span class="r-metric-num">17.7%</span>
+        <span class="r-metric-label">Latency Reduction</span>
+      </div>
+      <div class="r-metric">
+        <span class="r-metric-num">35%</span>
+        <span class="r-metric-label">TLB Miss Reduction</span>
+      </div>
+      <div class="r-metric">
+        <span class="r-metric-num">1100+</span>
+        <span class="r-metric-label">Lines of Kernel Code</span>
+      </div>
+    </div>
+    <div class="exp-chips">
+      <span class="chip highlight">EPT/TLB Security</span>
+      <span class="chip highlight">Virtualization</span>
+      <span class="chip highlight">Linux KVM</span>
+      <span class="chip">x86 Architecture</span>
+      <span class="chip">Memory Management</span>
+      <span class="chip">Cloud Security</span>
+      <span class="chip">Hypervisor Design</span>
+    </div>
+  </div>
+</section>
+
+<!-- ========== PROJECTS ========== -->
+<section id="projects">
+  <div class="sec-header">
+    <div class="sec-tag">PORTFOLIO</div>
+    <h2 class="sec-title">Featured <span>Projects</span></h2>
+  </div>
+  <div class="projects-grid">
+    <div class="project-card">
+      <div class="proj-type">CYBERSECURITY · LIVE</div>
+      <div class="proj-title">SOC Threat Triage Simulator</div>
+      <p class="proj-desc">Interactive SIEM alert triage simulator with 10 real-world scenarios. Classify threats vs false positives with MITRE ATT&CK context, live scoring, attack kill chain timeline, and analyst grade.</p>
+      <div class="proj-stack">
+        <span class="chip highlight">JavaScript</span>
+        <span class="chip">HTML/CSS</span>
+        <span class="chip">MITRE ATT&CK</span>
+        <span class="chip">SOC Logic</span>
+      </div>
+      <a href="https://preetkaur3535ok.github.io/SOC--THREAT-TRIAGE-SIMULATOR" target="_blank" class="proj-link">Live Demo →</a>
+    </div>
+    <div class="project-card">
+      <div class="proj-type">WEB DESIGN · LIVE</div>
+      <div class="proj-title">WordPress Design Portfolio</div>
+      <p class="proj-desc">Full luxury business website designed for an interior design studio. Responsive layout, CSS animations, portfolio gallery, testimonials, contact form — client-ready quality.</p>
+      <div class="proj-stack">
+        <span class="chip highlight">HTML5</span>
+        <span class="chip">CSS3</span>
+        <span class="chip">JavaScript</span>
+        <span class="chip">Responsive</span>
+      </div>
+      <a href="https://preetkaur3535ok.github.io/portfolio-samples" target="_blank" class="proj-link">Live Demo →</a>
+    </div>
+    <div class="project-card">
+      <div class="proj-type">FULL STACK · ACADEMIC</div>
+      <div class="proj-title">Student Management System</div>
+      <p class="proj-desc">Full-stack web application with role-based access control for 4 user types (Admin, Instructor, Student, Guardian). Implements RBAC, authentication, and secure database design.</p>
+      <div class="proj-stack">
+        <span class="chip highlight">Python</span>
+        <span class="chip">RBAC</span>
+        <span class="chip">Database Design</span>
+        <span class="chip">Authentication</span>
+      </div>
+    </div>
+    <div class="project-card">
+      <div class="proj-type">FULL STACK · ACADEMIC</div>
+      <div class="proj-title">Hospital Management System</div>
+      <p class="proj-desc">Secure HMS handling sensitive patient data with HIPAA-relevant controls. Implements patient record management, role-based access, inventory tracking, and staff scheduling.</p>
+      <div class="proj-stack">
+        <span class="chip highlight">Python</span>
+        <span class="chip">Data Privacy</span>
+        <span class="chip">RBAC</span>
+        <span class="chip">System Design</span>
+      </div>
+    </div>
+    <div class="project-card">
+      <div class="proj-type">PYTHON · ACADEMIC</div>
+      <div class="proj-title">Fruit Ninja Game (Python)</div>
+      <p class="proj-desc">Fruit Ninja recreated from scratch in Python using pygame. Real-time collision detection, dynamic game state management, audio integration, and OOP design patterns.</p>
+      <div class="proj-stack">
+        <span class="chip highlight">Python</span>
+        <span class="chip">pygame</span>
+        <span class="chip">OOP</span>
+        <span class="chip">Algorithms</span>
+      </div>
+    </div>
+    <div class="project-card">
+      <div class="proj-type">RESUME WRITING · LIVE</div>
+      <div class="proj-title">Resume Before & After Sample</div>
+      <p class="proj-desc">Professional resume transformation showcase. Demonstrates the difference between weak and high-impact resumes using real Director-level supply chain management example.</p>
+      <div class="proj-stack">
+        <span class="chip highlight">Career Coaching</span>
+        <span class="chip">Resume Writing</span>
+        <span class="chip">HTML/CSS</span>
+      </div>
+      <a href="https://preetkaur3535ok.github.io/portfolio-samples/resume.html" target="_blank" class="proj-link">View Sample →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ========== SKILLS ========== -->
+<section id="skills">
+  <div class="sec-header">
+    <div class="sec-tag">TECHNICAL EXPERTISE</div>
+    <h2 class="sec-title">Skills & <span>Tools</span></h2>
+  </div>
+  <div class="skills-grid">
+    <div class="skill-group">
+      <div class="skill-group-title">CYBERSECURITY CORE</div>
+      <div class="skill-item"><div class="skill-name"><span>SOC Operations</span><span>95%</span></div><div class="skill-bar"><div class="skill-fill" data-width="95"></div></div></div>
+      <div class="skill-item"><div class="skill-name"><span>Threat Intelligence</span><span>92%</span></div><div class="skill-bar"><div class="skill-fill" data-width="92"></div></div></div>
+      <div class="skill-item"><div class="skill-name"><span>Incident Response</span><span>88%</span></div><div class="skill-bar"><div class="skill-fill" data-width="88"></div></div></div>
+      <div class="skill-item"><div class="skill-name"><span>Vulnerability Assessment</span><span>85%</span></div><div class="skill-bar"><div class="skill-fill" data-width="85"></div></div></div>
+      <div class="skill-item"><div class="skill-name"><span>OSINT</span><span>90%</span></div><div class="skill-bar"><div class="skill-fill" data-width="90"></div></div></div>
+    </div>
+    <div class="skill-group">
+      <div class="skill-group-title">SIEM & TOOLS</div>
+      <div class="skill-item"><div class="skill-name"><span>Splunk</span><span>90%</span></div><div class="skill-bar"><div class="skill-fill" data-width="90"></div></div></div>
+      <div class="skill-item"><div class="skill-name"><span>MITRE ATT&CK Navigator</span><span>92%</span></div><div class="skill-bar"><div class="skill-fill" data-width="92"></div></div></div>
+      <div class="skill-item"><div class="skill-name"><span>Wireshark</span><span>85%</span></div><div class="skill-bar"><div class="skill-fill" data-width="85"></div></div></div>
+      <div class="skill-item"><div class="skill-name"><span>Nmap / OpenVAS</span><span>82%</span></div><div class="skill-bar"><div class="skill-fill" data-width="82"></div></div></div>
+      <div class="skill-item"><div class="skill-name"><span>Kali Linux</span><span>80%</span></div><div class="skill-bar"><div class="skill-fill" data-width="80"></div></div></div>
+    </div>
+    <div class="skill-group">
+      <div class="skill-group-title">SYSTEMS & RESEARCH</div>
+      <div class="skill-item"><div class="skill-name"><span>x86 / EPT / TLB</span><span>88%</span></div><div class="skill-bar"><div class="skill-fill" data-width="88"></div></div></div>
+      <div class="skill-item"><div class="skill-name"><span>VMware / VirtualBox</span><span>85%</span></div><div class="skill-bar"><div class="skill-fill" data-width="85"></div></div></div>
+      <div class="skill-item"><div class="skill-name"><span>Linux / Bash</span><span>82%</span></div><div class="skill-bar"><div class="skill-fill" data-width="82"></div></div></div>
+      <div class="skill-item"><div class="skill-name"><span>Python</span><span>78%</span></div><div class="skill-bar"><div class="skill-fill" data-width="78"></div></div></div>
+      <div class="skill-item"><div class="skill-name"><span>SQL (Advanced)</span><span>80%</span></div><div class="skill-bar"><div class="skill-fill" data-width="80"></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== CERTIFICATIONS ========== -->
+<section id="certifications">
+  <div class="sec-header">
+    <div class="sec-tag">CREDENTIALS</div>
+    <h2 class="sec-title">Certifications & <span>Awards</span></h2>
+  </div>
+  <div class="certs-grid">
+    <div class="cert-card"><div class="cert-icon">🏴</div><div class="cert-name">Ethical Hacking Essentials (EHE)</div><div class="cert-issuer">EC-COUNCIL</div></div>
+    <div class="cert-card"><div class="cert-icon">🔵</div><div class="cert-name">Google Cybersecurity Certificate</div><div class="cert-issuer">GOOGLE / COURSERA</div></div>
+    <div class="cert-card"><div class="cert-icon">🟣</div><div class="cert-name">IBM Cybersecurity Analyst</div><div class="cert-issuer">IBM / COURSERA</div></div>
+    <div class="cert-card"><div class="cert-icon">🌐</div><div class="cert-name">Intro to Cybersecurity</div><div class="cert-issuer">CISCO</div></div>
+    <div class="cert-card"><div class="cert-icon">📊</div><div class="cert-name">Advanced SQL</div><div class="cert-issuer">KAGGLE</div></div>
+    <div class="cert-card"><div class="cert-icon">📊</div><div class="cert-name">Data Cleaning</div><div class="cert-issuer">KAGGLE</div></div>
+    <div class="cert-card"><div class="cert-icon">💬</div><div class="cert-name">PTE Professional English</div><div class="cert-issuer">PEARSON</div></div>
+    <div class="cert-card"><div class="cert-icon">🔬</div><div class="cert-name">EPT/TLB Research — IEEE</div><div class="cert-issuer">HOFSTRA UNIVERSITY · 2023</div></div>
+  </div>
+</section>
+
+<!-- ========== EDUCATION ========== -->
+<section id="education">
+  <div class="sec-header">
+    <div class="sec-tag">ACADEMIC BACKGROUND</div>
+    <h2 class="sec-title">Education</h2>
+  </div>
+  <div class="edu-grid">
+    <div class="edu-card">
+      <div class="edu-degree">MS Cyber/Computer Forensics & Counterterrorism</div>
+      <div class="edu-school">The City College of New York (CCNY)</div>
+      <div class="edu-date">Expected April 2026 · New York, NY</div>
+    </div>
+    <div class="edu-card">
+      <div class="edu-degree">MS Cybersecurity Technology · 18 Credits · GPA 3.56</div>
+      <div class="edu-school">Hofstra University</div>
+      <div class="edu-date">Sept 2024 — Dec 2025 · Hempstead, NY</div>
+    </div>
+    <div class="edu-card">
+      <div class="edu-degree">Graduate-Level Academic English & Professional Communication</div>
+      <div class="edu-school">New York Institute of English and Business (ALI)</div>
+      <div class="edu-date">Jan 2026 — Present · New York, NY · Active F-1</div>
+    </div>
+    <div class="edu-card">
+      <div class="edu-degree">Bachelor of Computer Applications (BCA) · CGPA 8.79/10 · First Division</div>
+      <div class="edu-school">IITM — GGSIPU</div>
+      <div class="edu-date">Nov 2020 — Sept 2023 · New Delhi, India</div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== SERVICES ========== -->
+<section id="services">
+  <div class="sec-header">
+    <div class="sec-tag">FREELANCE SERVICES</div>
+    <h2 class="sec-title">What I <span>Offer</span></h2>
+  </div>
+  <div class="services-grid">
+    <div class="service-card">
+      <div class="svc-icon">🔐</div>
+      <div class="svc-title">CYBERSECURITY</div>
+      <p class="svc-desc">SOC consulting, security reviews, and career coaching for anyone breaking into the cybersecurity field.</p>
+      <ul class="svc-items">
+        <li>SOC operations consulting</li>
+        <li>Threat intelligence reports</li>
+        <li>Career coaching & mentoring</li>
+        <li>Resume review for cyber roles</li>
+        <li>MITRE ATT&CK framework guidance</li>
+      </ul>
+      <div class="svc-price">Contact for pricing</div>
+    </div>
+    <div class="service-card">
+      <div class="svc-icon">📄</div>
+      <div class="svc-title">RESUME WRITING</div>
+      <p class="svc-desc">Professional resume rewrites and LinkedIn optimization that get you interviews — not just submissions.</p>
+      <ul class="svc-items">
+        <li>Resume rewrite from scratch</li>
+        <li>LinkedIn profile optimization</li>
+        <li>Cover letter writing</li>
+        <li>Career progression narrative</li>
+        <li>Director/executive level resumes</li>
+      </ul>
+      <div class="svc-price">From $75</div>
+    </div>
+    <div class="service-card">
+      <div class="svc-icon">🎨</div>
+      <div class="svc-title">WEB DESIGN</div>
+      <p class="svc-desc">Clean, professional WordPress-style websites built from scratch. Responsive, animated, client-ready.</p>
+      <ul class="svc-items">
+        <li>Full business websites</li>
+        <li>Portfolio sites</li>
+        <li>Landing pages</li>
+        <li>Responsive mobile design</li>
+        <li>GitHub Pages hosting setup</li>
+      </ul>
+      <div class="svc-price">From $150</div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== CONTACT ========== -->
+<section id="contact">
+  <div class="sec-header">
+    <div class="sec-tag">GET IN TOUCH</div>
+    <h2 class="sec-title">Contact <span>Me</span></h2>
+  </div>
+  <div class="contact-grid">
+    <div class="contact-info">
+      <div class="contact-item">
+        <div class="contact-icon">✉</div>
+        <div><div class="contact-label">EMAIL</div><div class="contact-value"><a href="mailto:preetkaur3535ok@gmail.com">preetkaur3535ok@gmail.com</a></div></div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">📱</div>
+        <div><div class="contact-label">PHONE</div><div class="contact-value">(516) 751-7472</div></div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">📍</div>
+        <div><div class="contact-label">LOCATION</div><div class="contact-value">Merrick, NY 11566 · Open to NYC & Dubai/UAE</div></div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">🔗</div>
+        <div><div class="contact-label">LINKEDIN</div><div class="contact-value"><a href="https://linkedin.com/in/preet-kaur3535" target="_blank">linkedin.com/in/preet-kaur3535</a></div></div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">💻</div>
+        <div><div class="contact-label">GITHUB</div><div class="contact-value"><a href="https://github.com/preetkaur3535ok" target="_blank">github.com/preetkaur3535ok</a></div></div>
+      </div>
+      <div class="avail-badge">
+        <div class="status-dot"></div>
+        AVAILABLE FOR INTERNSHIPS & ROLES — NYC & DUBAI
+      </div>
+    </div>
+    <form class="contact-form" onsubmit="return false;">
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Name</label><input type="text" class="form-input" placeholder="Your name"></div>
+        <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" placeholder="your@email.com"></div>
+      </div>
+      <div class="form-group"><label class="form-label">Subject</label><input type="text" class="form-input" placeholder="Internship opportunity / Freelance project..."></div>
+      <div class="form-group"><label class="form-label">Message</label><textarea class="form-input" placeholder="Tell me about the opportunity or project..."></textarea></div>
+      <button type="submit" class="btn-primary" style="width:fit-content">Send Message →</button>
+    </form>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="footer-logo">PREET.KAUR</div>
+  <div class="footer-copy">© 2026 Preet Kaur · Built with purpose</div>
+  <div class="footer-links">
+    <a href="https://linkedin.com/in/preet-kaur3535" target="_blank">LinkedIn</a>
+    <a href="https://github.com/preetkaur3535ok" target="_blank">GitHub</a>
+    <a href="mailto:preetkaur3535ok@gmail.com">Email</a>
+  </div>
+</footer>
+
+<script>
+// SPLASH
+setTimeout(() => {
+  const splash = document.getElementById('splash');
+  splash.style.opacity = '0';
+  setTimeout(() => splash.style.display = 'none', 800);
+}, 1800);
+
+// CANVAS BACKGROUND
+const canvas = document.getElementById('bg-canvas');
+const ctx = canvas.getContext('2d');
+let particles = [];
+const isMobile = window.innerWidth < 768;
+const particleCount = isMobile ? 40 : 80;
+
+function resize() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+class Particle {
+  constructor() { this.reset(); }
+  reset() {
+    this.x = Math.random() * canvas.width;
+    this.y = Math.random() * canvas.height;
+    this.vx = (Math.random() - 0.5) * 0.3;
+    this.vy = (Math.random() - 0.5) * 0.3;
+    this.size = Math.random() * 1.5 + 0.5;
+    this.opacity = Math.random() * 0.4 + 0.1;
+  }
+  update() {
+    this.x += this.vx;
+    this.y += this.vy;
+    if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) this.reset();
+  }
+  draw() {
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(0,255,100,${this.opacity})`;
+    ctx.fill();
+  }
+}
+
+for (let i = 0; i < particleCount; i++) particles.push(new Particle());
+
+function animateCanvas() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = 'rgba(4,10,6,0)';
+  particles.forEach(p => { p.update(); p.draw(); });
+  for (let i = 0; i < particles.length; i++) {
+    for (let j = i + 1; j < particles.length; j++) {
+      const dx = particles[i].x - particles[j].x;
+      const dy = particles[i].y - particles[j].y;
+      const dist = Math.sqrt(dx*dx + dy*dy);
+      if (dist < 100) {
+        ctx.beginPath();
+        ctx.moveTo(particles[i].x, particles[i].y);
+        ctx.lineTo(particles[j].x, particles[j].y);
+        ctx.strokeStyle = `rgba(0,255,100,${0.06 * (1 - dist/100)})`;
+        ctx.lineWidth = 0.5;
+        ctx.stroke();
+      }
+    }
+  }
+  requestAnimationFrame(animateCanvas);
+}
+animateCanvas();
+
+// CUSTOM CURSOR
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursorRing');
+let mx = 0, my = 0, rx = 0, ry = 0;
+
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  cursor.style.left = mx - 6 + 'px';
+  cursor.style.top = my - 6 + 'px';
+});
+
+function animateCursor() {
+  rx += (mx - rx - 18) * 0.15;
+  ry += (my - ry - 18) * 0.15;
+  ring.style.left = rx + 'px';
+  ring.style.top = ry + 'px';
+  requestAnimationFrame(animateCursor);
+}
+animateCursor();
+
+// SCROLL PROGRESS
+window.addEventListener('scroll', () => {
+  const pct = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+  document.getElementById('scrollProgress').style.width = pct + '%';
+});
+
+// SECTION REVEAL
+const sections = document.querySelectorAll('section');
+const dots = document.querySelectorAll('.sec-dot');
+
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      // Skill bars
+      entry.target.querySelectorAll('.skill-fill').forEach(bar => {
+        bar.style.width = bar.getAttribute('data-width') + '%';
+      });
+    }
+  });
+}, { threshold: 0.15 });
+
+sections.forEach(s => observer.observe(s));
+
+// SECTION DOTS ACTIVE
+const secIds = ['hero','about','experience','research','projects','skills','certifications','education','services','contact'];
+window.addEventListener('scroll', () => {
+  const scrollY = window.scrollY + 200;
+  secIds.forEach((id, i) => {
+    const el = document.getElementById(id);
+    if (el && scrollY >= el.offsetTop) {
+      dots.forEach(d => d.classList.remove('active'));
+      if (dots[i]) dots[i].classList.add('active');
+    }
+  });
+});
+
+// EXP ACCORDION
+function toggleExp(el) {
+  el.classList.toggle('open');
+}
+
+// SCROLL TO
+function scrollTo(selector) {
+  document.querySelector(selector)?.scrollIntoView({ behavior: 'smooth' });
+}
+
+// Hide cursor on mobile
+if (isMobile) {
+  cursor.style.display = 'none';
+  ring.style.display = 'none';
+  document.body.style.cursor = 'auto';
+}
+</script>
+</body>
+</html>
